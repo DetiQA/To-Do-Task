@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Deti ToDo app</title>
+    <style>
+        :root {
+            --bg: #f4f4f4;
+            --card-eng: #ffffff;
+            --text: #222;
+            --accent: #28a745;
+            --accent-dark: #218838;
+            --danger: #dc3545;
+            --primary: #007bff;
+            --muted: #666;
+            --border: #ddd;
+        }
+
+        body.dark {
+            --bg: #121212;
+            --card-eng: #1e1e1e;
+            --text: #f5f5f5;
+            --accent: #4caf50;
+            --accent-dark: #3c8c40;
+            --danger: #ff5252;
+            --primary: #66b0ff;
+            --muted: #aaa;
+            --border: #333;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 30px 10px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            background: var(--card-eng);
+            padding: 20px;
+            width: 430px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        #themeToggle {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        #themeToggle:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .inputs {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 8px;
+        }
+
+        #taskInput, #deadlineInput, #categorySelect {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+        }
+
+        #taskInput::placeholder {
+            color: var(--muted);
+        }
+
+        #addBtn {
+            grid-column: span 2;
+            padding: 9px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s ease, transform 0.08s ease;
+        }
+
+        #addBtn:hover {
+            background: var(--accent-dark);
+        }
+
+        #addBtn:active {
+            transform: scale(0.98);
+        }
+
+        ul {
+            margin-top: 20px;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            background: rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+        }
+
+        li.dragging {
+            opacity: 0.6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .task-text span {
+            word-break: break-word;
+        }
+
+        .task-text span.completed {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+
+        .category-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .category-Work {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .category-School {
+            border-color: #3f51b5;
+            color: #3f51b5;
+        }
+
+        .category-Personal {
+            border-color: #9c27b0;
+            color: #9c27b0;
+        }
+
+        .middle-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .countdown.due-soon {
+            color: #ff9800;
+        }
+
+        .countdown.overdue {
+            color: #e53935;
+        }
+
+        .bottom-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .btn {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-complete {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #222;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:hover {
+            filter: brightness(0.95);
+        }
+
+        .stats {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadeIn 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input.edit-input {
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            padding: 4px;
+            background: transparent;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-row">
+        <h2>ToDo List</h2>
+        <button id="themeToggle">Dark Mode</button>
+    </div>
+
+    <div class="inputs">
+        <input type="text" id="taskInput" placeholder="Input task...">
+
+        <select id="categorySelect">
+            <option value="General">General</option>
+            <option value="Work">Work</option>
+            <option value="School">School</option>
+            <option value="Personal">Personal</option>
+        </select>
+
+        <input type="datetime-local" id="deadlineInput">
+        <button id="addBtn">Add task</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <div class="stats">
+        <div id="statsLeft"></div>
+        <div id="statsRight"></div>
+    </div>
+</div>
+
+<script>
+    const taskInput = document.getElementById("taskInput");
+    const categorySelect = document.getElementById("categorySelect");
+    const deadlineInput = document.getElementById("deadlineInput");
+    const addBtn = document.getElementById("addBtn");
+    const taskList = document.getElementById("taskList");
+    const themeToggle = document.getElementById("themeToggle");
+    const statsLeft = document.getElementById("statsLeft");
+    const statsRight = document.getElementById("statsRight");
+
+    let tasks = [];
+    let dragSrcId = null;
+
+    // -------- Theme (Dark / Light) --------
+    function loadTheme() {
+        const theme = localStorage.getItem("theme") || "light";
+        if (theme === "dark") {
+            document.body.classList.add("dark");
+            themeToggle.textContent = "Light Mode";
+        } else {
+            document.body.classList.remove("dark");
+            themeToggle.textContent = "Dark Mode";
+        }
+    }
+
+    themeToggle.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        themeToggle.textContent = isDark ? "Light Mode" : "Dark Mode";
+    });
+
+    // -------- LOCALSTORAGE Function --------
+    function saveTasks() {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function loadTasks() {
+        const stored = localStorage.getItem("tasks");
+        tasks = stored ? JSON.parse(stored) : [];
+        taskList.innerHTML = "";
+        tasks.forEach(t => createTaskElement(t, false));
+        updateStats();
+    }
+
+    // -------- Statistics --------
+    function updateStats() {
+        const total = tasks.length;
+        const completed = tasks.filter(t => t.completed).length;
+        const active = total - completed;
+        statsLeft.textContent = `Total: ${total} | Active: ${active}`;
+        statsRight.textContent = `Completed: ${completed}`;
+    }
+
+    // -------- Add task --------
+    addBtn.addEventListener("click", addTask);
+    taskInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addTask();
+    });
+
+    function addTask() {
+        const text = taskInput.value.trim();
+        if (text === "") return;
+
+        const category = categorySelect.value;
+        const deadline = deadlineInput.value || null;
+
+        const task = {
+            id: Date.now().toString(),
+            text,
+            category,
+            deadline,
+            createdAt: Date.now(),
+            completed: false
+        };
+
+        tasks.push(task);
+        saveTasks();
+        createTaskElement(task, true);
+        updateStats();
+
+        taskInput.value = "";
+        deadlineInput.value = "";
+    }
+
+    // -------- СЪЗДАВАНЕ НА DOM ЕЛЕМЕНТ ЗА ЗАДАЧА --------
+    function createTaskElement(task, animated) {
+        const li = document.createElement("li");
+        li.dataset.id = task.id;
+        li.draggable = true;
+        if (animated) li.classList.add("fade-in");
+
+        // Top row
+        const topRow = document.createElement("div");
+        topRow.className = "top-row";
+
+        const textDiv = document.createElement("div");
+        textDiv.className = "task-text";
+        const span = document.createElement("span");
+        span.textContent = task.text;
+        if (task.completed) span.classList.add("completed");
+        textDiv.appendChild(span);
+
+        // редактиране при двойно кликване
+        span.addEventListener("dblclick", () => {
+            startEditTask(task.id, span);
+        });
+
+        const catDiv = document.createElement("div");
+        const catSpan = document.createElement("span");
+        catSpan.className = "category-badge";
+        if (task.category && task.category !== "General") {
+            catSpan.classList.add(`category-${task.category}`);
+        }
+        catSpan.textContent = task.category || "Обща";
+        catDiv.appendChild(catSpan);
+
+        topRow.appendChild(textDiv);
+        topRow.appendChild(catDiv);
+
+        // Middle row (deadline + countdown)
+        const middleRow = document.createElement("div");
+        middleRow.className = "middle-row";
+
+        const createdInfo = document.createElement("div");
+        const createdDate = new Date(task.createdAt);
+        createdInfo.textContent = "Created: " +
+            createdDate.toLocaleDateString() + " " +
+            createdDate.toLocaleTimeString().slice(0,5);
+
+        const countdown = document.createElement("div");
+        countdown.className = "countdown";
+        middleRow.appendChild(createdInfo);
+        middleRow.appendChild(countdown);
+
+        // Bottom row (buttons)
+        const bottomRow = document.createElement("div");
+        bottomRow.className = "bottom-row";
+
+        const completeBtn = document.createElement("button");
+        completeBtn.className = "btn btn-complete";
+        completeBtn.textContent = task.completed ? "Uncheck" : "Complete";
+        completeBtn.onclick = () => toggleComplete(task.id, span, completeBtn);
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn btn-edit";
+        editBtn.textContent = "Edit";
+        editBtn.onclick = () => startEditTask(task.id, span);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "btn btn-delete";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = () => deleteTask(task.id, li);
+
+        bottomRow.appendChild(completeBtn);
+        bottomRow.appendChild(editBtn);
+        bottomRow.appendChild(deleteBtn);
+
+        li.appendChild(topRow);
+        li.appendChild(middleRow);
+        li.appendChild(bottomRow);
+
+        taskList.appendChild(li);
+
+        // Countdown обновяване
+        updateCountdownForTask(task, countdown);
+    }
+
+    // -------- ОБНОВЯВАНЕ НА COUNTDOWN --------
+    function updateCountdownForTask(task, countdownEl) {
+        if (!task.deadline) {
+            countdownEl.textContent = "No deadline";
+            countdownEl.classList.remove("due-soon", "overdue");
+            return;
+        }
+
+        function update() {
+            const now = new Date().getTime();
+            const end = new Date(task.deadline).getTime();
+            const diff = end - now;
+
+            if (isNaN(end)) {
+                countdownEl.textContent = "Invalid deadline";
+                countdownEl.classList.remove("due-soon", "overdue");
+                return;
+            }
+
+            if (diff <= 0) {
+                countdownEl.textContent = "Overdue";
+                countdownEl.classList.remove("due-soon");
+                countdownEl.classList.add("overdue");
+                return;
+            }
+
+            const mins = Math.floor(diff / 60000);
+            const hours = Math.floor(mins / 60);
+            const days = Math.floor(hours / 24);
+
+            let text;
+            if (days > 0) text = `Left: ${days} days`;
+            else if (hours > 0) text = `Left: ${hours} hours`;
+            else text = `Left: ${mins} min`;
+
+            countdownEl.textContent = text;
+
+            countdownEl.classList.remove("overdue", "due-soon");
+            if (diff < 60 * 60 * 1000) {
+                countdownEl.classList.add("due-soon");
+            }
+        }
+
+        update();
+        setInterval(update, 60000); // обновяване на минута (за по-малко натоварване)
+    }
+
+    // -------- ЗАВЪРШВАНЕ / ОТМАРКИРАНЕ --------
+    function toggleComplete(id, spanEl, btn) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        task.completed = !task.completed;
+        if (task.completed) {
+            spanEl.classList.add("completed");
+            btn.textContent = "Uncheck";
+        } else {
+            spanEl.classList.remove("completed");
+            btn.textContent = "Completed";
+        }
+        saveTasks();
+        updateStats();
+    }
+
+    // -------- РЕДАКТИРАНЕ НА ЗАДАЧА --------
+    function startEditTask(id, spanEl) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = task.text;
+        input.className = "edit-input";
+
+        spanEl.replaceWith(input);
+        input.focus();
+        input.select();
+
+        function finish(save) {
+            if (save) {
+                const newText = input.value.trim();
+                if (newText !== "") {
+                    task.text = newText;
+                    saveTasks();
+                }
+            }
+            const newSpan = document.createElement("span");
+            newSpan.textContent = task.text;
+            if (task.completed) newSpan.classList.add("completed");
+            newSpan.addEventListener("dblclick", () => startEditTask(id, newSpan));
+            input.replaceWith(newSpan);
+        }
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") finish(true);
+            if (e.key === "Escape") finish(false);
+        });
+
+        input.addEventListener("blur", () => finish(true));
+    }
+
+    // -------- ИЗТРИВАНЕ НА ЗАДАЧА --------
+    function deleteTask(id, liEl) {
+        liEl.style.opacity = "0";
+        liEl.style.transform = "translateX(10px)";
+        setTimeout(() => {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            liEl.remove();
+            updateStats();
+        }, 150);
+    }
+
+    // -------- DRAG & DROP ПОДРЕЖДАНЕ --------
+    taskList.addEventListener("dragstart", (e) => {
+        const li = e.target.closest("li");
+        if (!li) return;
+        dragSrcId = li.dataset.id;
+        li.classList.add("dragging");
+    });
+
+    taskList.addEventListener("dragend", (e) => {
+        const li = e.target.closest("li");
+        if (li) li.classList.remove("dragging");
+    });
+
+    taskList.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const dragging = taskList.querySelector(".dragging");
+        if (!dragging) return;
+
+        const afterElement = getDragAfterElement(taskList, e.clientY);
+        if (afterElement == null) {
+            taskList.appendChild(dragging);
+        } else {
+            taskList.insertBefore(dragging, afterElement);
+        }
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    // След като визуално подредим задачите, запазваме новия ред при пускане
+    taskList.addEventListener("drop", () => {
+        const newOrder = [];
+        taskList.querySelectorAll("li").forEach(li => {
+            const id = li.dataset.id;
+            const task = tasks.find(t => t.id === id);
+            if (task) newOrder.push(task);
+        });
+        tasks = newOrder;
+        saveTasks();
+    });
+
+    // -------- ИНИЦИАЛИЗАЦИЯ --------
+    loadTheme();
+    loadTasks();
+</script>
+</body>
+</html>
