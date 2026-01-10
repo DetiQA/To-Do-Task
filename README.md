@@ -7,11 +7,7 @@ It includes drag & drop sorting, dark mode, categories, deadlines with countdown
 
 ## 🛠️ Technologies Used - **HTML5** - **CSS3** - **JavaScript (Vanilla)** - **LocalStorage** 
 
-## ▶️ How to Run the Project 
-1. Download the project (Code → Download ZIP)
-2. Extract the ZIP file
-3. Open **index.html** in your browser
-4. The app runs locally — no installation required --- ## 📸 Screenshots
+
 
    ## 👤 Author
    Created by Deti
