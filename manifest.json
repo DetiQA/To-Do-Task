@@ -1,7 +1,7 @@
 {
   "name": "To-Do Task",
   "short_name": "ToDo",
-  "start_url": "./index.html",
+  "start_url": "/To-Do-Task/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#28A745",
