@@ -37,25 +37,29 @@ body.dark {
     --border: #333;
 }
 
-/* ❗ FIX: премахнат flex, защото Android 12 PWA го чупи */
+/* ❗ FIX: Премахнат flex — Android 12 PWA го чупи */
 body {
     font-family: Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 30px 10px;
+    padding: 0;
+    margin: 0;
     transition: background 0.3s ease, color 0.3s ease;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
 }
 
-/* Центриране без flex (работи на Android 12) */
+/* Центриране без flex */
 .container {
     background: var(--card-eng);
     padding: 20px;
     width: 100%;
-    max-width: 430px;
+    max-width: none; /* ❗ FIX: Премахва ограничението 430px */
     margin: 0 auto;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0; /* ❗ FIX: За fullscreen вид */
+    box-shadow: none; /* По‑добър вид за мобилно приложение */
+    box-sizing: border-box;
 }
 
 .header-row {
@@ -319,7 +323,7 @@ input.edit-input {
     font-size: 12px;
 }
 
-/* 📱 MOBILE FIX — работи на Android 12+ */
+/* 📱 MOBILE FIX — 100% ширина на Android 12–14 */
 @media (max-width: 600px) {
 
     html, body {
@@ -863,6 +867,7 @@ if ("serviceWorker" in navigator) {
 
 
        
+
 
 
 
