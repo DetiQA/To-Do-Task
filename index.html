@@ -14,300 +14,339 @@
 
     <style>
        :root {
-            --bg: #f4f4f4;
-            --card-eng: #ffffff;
-            --text: #222;
-            --accent: #28a745;
-            --accent-dark: #218838;
-            --danger: #dc3545;
-            --primary: #007bff;
-            --muted: #666;
-            --border: #ddd;
-        }
+    --bg: #f4f4f4;
+    --card-eng: #ffffff;
+    --text: #222;
+    --accent: #28a745;
+    --accent-dark: #218838;
+    --danger: #dc3545;
+    --primary: #007bff;
+    --muted: #666;
+    --border: #ddd;
+}
 
-        body.dark {
-            --bg: #121212;
-            --card-eng: #1e1e1e;
-            --text: #f5f5f5;
-            --accent: #4caf50;
-            --accent-dark: #3c8c40;
-            --danger: #ff5252;
-            --primary: #66b0ff;
-            --muted: #aaa;
-            --border: #333;
-        }
+body.dark {
+    --bg: #121212;
+    --card-eng: #1e1e1e;
+    --text: #f5f5f5;
+    --accent: #4caf50;
+    --accent-dark: #3c8c40;
+    --danger: #ff5252;
+    --primary: #66b0ff;
+    --muted: #aaa;
+    --border: #333;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            padding: 30px 10px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
+/* ===== ГЛОБАЛНО — Android поведение ===== */
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 20px 10px;   /* листът е горе */
+    display: block;       /* стабилно на Android */
+}
 
-        .container {
-            background: var(--card-eng);
-            padding: 20px;
-            width: 100%; max-width: 430px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-        }
+.container {
+    background: var(--card-eng);
+    padding: 20px;
+    width: 100%;
+    max-width: 430px;     /* Android card ширина */
+    margin: 0 auto;       /* центриране */
+    border-radius: 16px;  /* Material Design */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+}
 
-        .header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
+/* ===== MOBILE — Android стабилност ===== */
+@media (max-width: 600px) {
 
-        h2 {
-            margin: 0;
-        }
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden;
+    }
 
-        #themeToggle {
-            padding: 6px 10px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 12px;
-        }
+    body {
+        display: block;
+        padding-top: 20px;
+    }
 
-        #themeToggle:hover {
-            background: rgba(0,0,0,0.04);
-        }
+    .container {
+        width: 94%;          /* бяло поле отстрани */
+        max-width: 420px;    /* Android card */
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
 
-        .inputs {
-            margin-top: 15px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 8px;
-        }
+    body, input, button, select, li {
+        font-size: 18px;     /* четим текст */
+    }
 
-        #taskInput, #deadlineInput, #categorySelect {
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-        }
+    h2 {
+        font-size: 22px;
+    }
+}
 
-        #taskInput::placeholder {
-            color: var(--muted);
-        }
+/* ===== Без хоризонтален скрол ===== */
+html, body {
+    overflow-x: hidden;
+}
 
-        #addBtn {
-            grid-column: span 2;
-            padding: 9px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s ease, transform 0.08s ease;
-        }
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+}
 
-        #addBtn:hover {
-            background: var(--accent-dark);
-        }
+/* ===== UI елементи ===== */
 
-        #addBtn:active {
-            transform: scale(0.98);
-        }
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
 
-        ul {
-            margin-top: 20px;
-            padding: 0;
-        }
+h2 {
+    margin: 0;
+}
 
-        li {
-            list-style: none;
-            background: rgba(0,0,0,0.02);
-            border: 1px solid var(--border);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            cursor: grab;
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, opacity 0.2s ease;
-        }
+#themeToggle {
+    padding: 6px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 12px;
+}
 
-        li.dragging {
-            opacity: 0.6;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
+#themeToggle:hover {
+    background: rgba(0,0,0,0.04);
+}
 
-        .top-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
+.inputs {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+}
 
-        .task-text {
-            flex: 1;
-        }
+#taskInput, #deadlineInput, #categorySelect {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+}
 
-        .task-text span {
-            word-break: break-word;
-        }
+#taskInput::placeholder {
+    color: var(--muted);
+}
 
-        .task-text span.completed {
-            text-decoration: line-through;
-            color: #555;
-        }
+#addBtn {
+    grid-column: span 2;
+    padding: 10px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s ease, transform 0.08s ease;
+}
 
-        .category-badge {
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            border: 1px solid var(--border);
-            white-space: nowrap;
-        }
+#addBtn:hover {
+    background: var(--accent-dark);
+}
 
-        .category-Work {
-            border-color: #ff9800;
-            color: #ff9800;
-        }
+#addBtn:active {
+    transform: scale(0.98);
+}
 
-        .category-School {
-            border-color: #3f51b5;
-            color: #3f51b5;
-        }
+ul {
+    margin-top: 20px;
+    padding: 0;
+}
 
-        .category-Personal {
-            border-color: #9c27b0;
-            color: #9c27b0;
-        }
+li {
+    list-style: none;
+    background: rgba(0,0,0,0.02);
+    border: 1px solid var(--border);
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-        .middle-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--muted);
-            align-items: center;
-            gap: 6px;
-        }
+.top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
 
-        .deadline-info {
-            color: red;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+.task-text {
+    flex: 1;
+}
 
-        .deadline-info.completed-deadline {
-            color: #555 !important;
-            font-weight: normal;
-        }
+.task-text span {
+    word-break: break-word;
+}
 
-        .countdown {
-            text-align: right;
-            font-size: 12px;
-            color: var(--muted);
-            min-width: 80px;
-        }
+.task-text span.completed {
+    text-decoration: line-through;
+    color: #555;
+}
 
-        .countdown.due-soon {
-            color: #ff9800;
-        }
+.category-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+}
 
-        .countdown.overdue {
-            color: #e53935;
-        }
+.category-Work {
+    border-color: #ff9800;
+    color: #ff9800;
+}
 
-        .alarm-icon {
-            font-size: 16px;
-            margin-left: 2px;
-            color: red;
-            display: inline-block;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+.category-School {
+    border-color: #3f51b5;
+    color: #3f51b5;
+}
 
-        .alarm-icon.alarm-active {
-            opacity: 1;
-            animation: shake 0.6s infinite;
-        }
+.category-Personal {
+    border-color: #9c27b0;
+    color: #9c27b0;
+}
 
-        .alarm-icon.completed-alarm {
-            color: #555;
-            opacity: 0.5;
-            animation: none;
-        }
+.middle-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    align-items: center;
+    gap: 6px;
+}
 
-        @keyframes shake {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(-10deg); }
-            100% { transform: rotate(0deg); }
-        }
+.deadline-info {
+    color: red;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
-        .bottom-row {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-        }
+.deadline-info.completed-deadline {
+    color: #555 !important;
+    font-weight: normal;
+}
 
-        .btn {
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: none;
-            font-size: 11px;
-            cursor: pointer;
-        }
+.countdown {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 80px;
+}
 
-        .btn-complete {
-            background: #17a2b8;
-            color: white;
-        }
+.countdown.due-soon {
+    color: #ff9800;
+}
 
-        .btn-edit {
-            background: #ffc107;
-            color: #222;
-        }
+.countdown.overdue {
+    color: #e53935;
+}
 
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-        }
+.alarm-icon {
+    font-size: 16px;
+    margin-left: 2px;
+    color: red;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-        .btn:hover {
-            filter: brightness(0.95);
-        }
+.alarm-icon.alarm-active {
+    opacity: 1;
+    animation: shake 0.6s infinite;
+}
 
-        .stats {
-            margin-top: 15px;
-            font-size: 13px;
-            color: var(--muted);
-            display: flex;
-            justify-content: space-between;
-        }
+.alarm-icon.completed-alarm {
+    color: #555;
+    opacity: 0.5;
+    animation: none;
+}
 
-        .fade-in {
-            opacity: 0;
-            transform: translateY(6px);
-            animation: fadeIn 0.2s forwards;
-        }
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
+}
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.bottom-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
 
-       input.edit-input {
+.btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.btn-complete {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-edit {
+    background: #ffc107;
+    color: #222;
+}
+
+.btn-delete {
+    background: var(--danger);
+    color: white;
+}
+
+.btn:hover {
+    filter: brightness(0.95);
+}
+
+.stats {
+    margin-top: 15px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input.edit-input {
     width: 100%;
     border-radius: 4px;
     border: 1px solid var(--border);
@@ -316,29 +355,11 @@
     color: var(--text);
     font-size: 12px;
 }
-
-/* MOBILE FIX */
-@media (max-width: 600px) {
-    body {
-        padding: 0 !important;
-        display: block !important;
-    }
-
-    .container {
-        max-width: 100% !important;
-        width: 100% !important;
-        border-radius: 0 !important;
-    }
-}
-
-</style>
-</head>
-<body>
-
     </style>
 </head>
 
 <body>
+
 <div class="container">
     <div class="header-row">
         <h2>ToDo List</h2>
@@ -855,6 +876,7 @@ if ("serviceWorker" in navigator) {
 
 
        
+
 
 
 
