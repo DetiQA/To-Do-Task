@@ -307,16 +307,18 @@
             }
         }
 
-        input.edit-input {
-            width: 100%;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            padding: 4px;
-            background: transparent;
-            color: var(--text);
-            font-size: 12px;
-        }
-        @media (max-width: 600px) {
+       input.edit-input {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    padding: 4px;
+    background: transparent;
+    color: var(--text);
+    font-size: 12px;
+}
+
+/* MOBILE FIX */
+@media (max-width: 600px) {
     body {
         padding: 0;
         display: block;
@@ -324,9 +326,14 @@
 
     .container {
         max-width: 100%;
+        width: 100%;
         border-radius: 0;
     }
 }
+</style>
+</head>
+<body>
+
     </style>
 </head>
 
@@ -847,6 +854,7 @@ if ("serviceWorker" in navigator) {
 
 
        
+
 
 
 
