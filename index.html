@@ -62,18 +62,24 @@ body {
 /* ===== MOBILE FIX — статичен, четим, центриран лист ===== */
 @media (max-width: 600px) {
 
-    body {
+    html, body {
         margin: 0;
-        padding: 20px 0;
-        display: flex;
-        justify-content: center;
-        background: var(--bg);
+        padding: 0;
+        max-width: 100%;
         overflow-x: hidden;
     }
 
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 20px;
+        background: var(--bg);
+    }
+
     .container {
-        width: 92%;              /* малко бяло поле отстрани */
-        max-width: 420px;        /* достатъчно широк, за да се чете */
+        width: 94%;          /* малко бяло поле отстрани */
+        max-width: 420px;    /* достатъчно широк, за да се чете */
         margin: 0 auto;
         border-radius: 12px;
         padding: 20px;
@@ -352,7 +358,6 @@ input.edit-input {
     background: transparent;
     color: var(--text);
     font-size: 12px;
-
    }
 }
 
@@ -880,6 +885,7 @@ if ("serviceWorker" in navigator) {
 
 
        
+
 
 
 
