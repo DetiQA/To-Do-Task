@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,880 +14,921 @@
     <meta name="theme-color" content="#28A745">
 
     <style>
-       :root {
-    --bg: #f4f4f4;
-    --card-eng: #ffffff;
-    --text: #222;
-    --accent: #28a745;
-    --accent-dark: #218838;
-    --danger: #dc3545;
-    --primary: #007bff;
-    --muted: #666;
-    --border: #ddd;
-}
+        :root {
+            --bg: #f4f4f4;
+            --card-eng: #ffffff;
+            --text: #222;
+            --accent: #28a745;
+            --accent-dark: #218838;
+            --danger: #dc3545;
+            --primary: #007bff;
+            --muted: #666;
+            --border: #ddd;
+        }
 
-body.dark {
-    --bg: #121212;
-    --card-eng: #1e1e1e;
-    --text: #f5f5f5;
-    --accent: #4caf50;
-    --accent-dark: #3c8c40;
-    --danger: #ff5252;
-    --primary: #66b0ff;
-    --muted: #aaa;
-    --border: #333;
-}
+        body.dark {
+            --bg: #121212;
+            --card-eng: #1e1e1e;
+            --text: #f5f5f5;
+            --accent: #4caf50;
+            --accent-dark: #3c8c40;
+            --danger: #ff5252;
+            --primary: #66b0ff;
+            --muted: #aaa;
+            --border: #333;
+        }
 
-/* ===== ГЛОБАЛНО — Android поведение ===== */
-body {
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 20px 10px;   /* листът е горе */
-    display: block;       /* стабилно на Android */
-}
+        body.dark #deadlineInput,
+        body.dark #categorySelect,
+        body.dark input.edit-input,
+        body.dark select.edit-input {
+            color: #f5f5f5 !important;
+            background-color: #1e1e1e !important;
+        }
 
-.container {
-    background: var(--card-eng);
-    padding: 20px;
-    width: 100%;
-    max-width: 430px;     /* Android card ширина */
-    margin: 0 auto;       /* центриране */
-    border-radius: 16px;  /* Material Design */
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    box-sizing: border-box;
-}
+        body.dark #categorySelect:focus,
+        body.dark select.edit-input:focus {
+            background-color: #1e1e1e !important;
+        }
 
-/* ===== MOBILE — Android стабилност ===== */
-@media (max-width: 600px) {
+        body.dark #categorySelect option,
+        body.dark select.edit-input option {
+            background: #121212 !important;
+            color: #f5f5f5 !important;
+        }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        overflow-x: hidden;
-    }
+        body.dark #categorySelect:focus option,
+        body.dark select.edit-input:focus option {
+            background: #121212 !important;
+            color: #f5f5f5 !important;
+        }
 
-    body {
-        display: block;
-        padding-top: 20px;
-    }
+        body.dark #categorySelect option:hover,
+        body.dark select.edit-input option:hover {
+            background: #2a2a2a !important;
+            color: #f5f5f5 !important;
+        }
 
-    .container {
-        width: 94%;          /* бяло поле отстрани */
-        max-width: 420px;    /* Android card */
-        margin: 0 auto;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
+        body.dark #deadlineInput::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
 
-    body, input, button, select, li {
-        font-size: 18px;     /* четим текст */
-    }
+        body.dark input.edit-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
 
-    h2 {
-        font-size: 22px;
-    }
-}
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 30px 10px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
 
-/* ===== Без хоризонтален скрол ===== */
-html, body {
-    overflow-x: hidden;
-}
+        .container {
+            background: var(--card-eng);
+            padding: 20px;
+            width: 100%;
+            max-width: 430px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
 
-* {
-    box-sizing: border-box;
-    max-width: 100%;
-}
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
 
-/* ===== UI елементи ===== */
+        h2 {
+            margin: 0;
+        }
 
-.header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
+        #themeToggle {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+        }
 
-h2 {
-    margin: 0;
-}
+        #themeToggle:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
 
-#themeToggle {
-    padding: 6px 10px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    font-size: 12px;
-}
+        .inputs {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 8px;
+        }
 
-#themeToggle:hover {
-    background: rgba(0,0,0,0.04);
-}
+        #taskInput,
+        #deadlineInput,
+        #categorySelect {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+        }
 
-.inputs {
-    margin-top: 15px;
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 8px;
-}
+        #taskInput::placeholder {
+            color: var(--muted);
+        }
 
-#taskInput, #deadlineInput, #categorySelect {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text);
-}
+        #addBtn {
+            grid-column: span 2;
+            padding: 9px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s ease, transform 0.08s ease;
+        }
 
-#taskInput::placeholder {
-    color: var(--muted);
-}
+        #addBtn:hover {
+            background: var(--accent-dark);
+        }
 
-#addBtn {
-    grid-column: span 2;
-    padding: 10px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s ease, transform 0.08s ease;
-}
+        #addBtn:active {
+            transform: scale(0.98);
+        }
 
-#addBtn:hover {
-    background: var(--accent-dark);
-}
+        ul {
+            margin-top: 20px;
+            padding: 0;
+        }
 
-#addBtn:active {
-    transform: scale(0.98);
-}
+        li {
+            list-style: none;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+        }
 
-ul {
-    margin-top: 20px;
-    padding: 0;
-}
+        li.dragging {
+            opacity: 0.6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
-li {
-    list-style: none;
-    background: rgba(0,0,0,0.02);
-    border: 1px solid var(--border);
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
 
-.top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
+        .task-text {
+            flex: 1;
+        }
 
-.task-text {
-    flex: 1;
-}
+        .task-text span {
+            word-break: break-word;
+        }
 
-.task-text span {
-    word-break: break-word;
-}
+        .task-text span.completed {
+            text-decoration: line-through;
+            color: #555;
+        }
 
-.task-text span.completed {
-    text-decoration: line-through;
-    color: #555;
-}
+        .category-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
 
-.category-badge {
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    border: 1px solid var(--border);
-    white-space: nowrap;
-}
+        .category-Work {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
 
-.category-Work {
-    border-color: #ff9800;
-    color: #ff9800;
-}
+        .category-School {
+            border-color: #3f51b5;
+            color: #3f51b5;
+        }
 
-.category-School {
-    border-color: #3f51b5;
-    color: #3f51b5;
-}
+        .category-Personal {
+            border-color: #9c27b0;
+            color: #9c27b0;
+        }
 
-.category-Personal {
-    border-color: #9c27b0;
-    color: #9c27b0;
-}
+        .middle-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+            align-items: center;
+            gap: 6px;
+        }
 
-.middle-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--muted);
-    align-items: center;
-    gap: 6px;
-}
+        .deadline-info {
+            color: red;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.deadline-info {
-    color: red;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
+        .deadline-info.completed-deadline {
+            color: #555 !important;
+            font-weight: normal;
+        }
 
-.deadline-info.completed-deadline {
-    color: #555 !important;
-    font-weight: normal;
-}
+        .countdown {
+            text-align: right;
+            font-size: 12px;
+            color: var(--muted);
+            min-width: 80px;
+        }
 
-.countdown {
-    text-align: right;
-    font-size: 12px;
-    color: var(--muted);
-    min-width: 80px;
-}
+        .countdown.due-soon {
+            color: #ff9800;
+        }
 
-.countdown.due-soon {
-    color: #ff9800;
-}
+        .countdown.overdue {
+            color: #e53935;
+        }
 
-.countdown.overdue {
-    color: #e53935;
-}
+        .alarm-icon {
+            font-size: 16px;
+            margin-left: 2px;
+            color: red;
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-.alarm-icon {
-    font-size: 16px;
-    margin-left: 2px;
-    color: red;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+        .alarm-icon.alarm-active {
+            opacity: 1;
+            animation: shake 0.6s infinite;
+        }
 
-.alarm-icon.alarm-active {
-    opacity: 1;
-    animation: shake 0.6s infinite;
-}
+        .alarm-icon.completed-alarm {
+            color: #555;
+            opacity: 0.5;
+            animation: none;
+        }
 
-.alarm-icon.completed-alarm {
-    color: #555;
-    opacity: 0.5;
-    animation: none;
-}
+        @keyframes shake {
+            0% {
+                transform: rotate(0deg);
+            }
 
-@keyframes shake {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(10deg); }
-    50% { transform: rotate(0deg); }
-    75% { transform: rotate(-10deg); }
-    100% { transform: rotate(0deg); }
-}
+            25% {
+                transform: rotate(10deg);
+            }
 
-.bottom-row {
-    display: flex;
-    justify-content: flex-end;
-    gap: 6px;
-}
+            50% {
+                transform: rotate(0deg);
+            }
 
-.btn {
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: none;
-    font-size: 11px;
-    cursor: pointer;
-}
+            75% {
+                transform: rotate(-10deg);
+            }
 
-.btn-complete {
-    background: #17a2b8;
-    color: white;
-}
+            100% {
+                transform: rotate(0deg);
+            }
+        }
 
-.btn-edit {
-    background: #ffc107;
-    color: #222;
-}
+        .bottom-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
 
-.btn-delete {
-    background: var(--danger);
-    color: white;
-}
+        .btn {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            font-size: 11px;
+            cursor: pointer;
+        }
 
-.btn:hover {
-    filter: brightness(0.95);
-}
+        .btn-complete {
+            background: #17a2b8;
+            color: white;
+        }
 
-.stats {
-    margin-top: 15px;
-    font-size: 13px;
-    color: var(--muted);
-    display: flex;
-    justify-content: space-between;
-}
+        .btn-edit {
+            background: #ffc107;
+            color: #222;
+        }
 
-.fade-in {
-    opacity: 0;
-    transform: translateY(6px);
-    animation: fadeIn 0.2s forwards;
-}
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
 
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .btn:hover {
+            filter: brightness(0.95);
+        }
 
-input.edit-input {
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    padding: 4px;
-    background: transparent;
-    color: var(--text);
-    font-size: 12px;
-}
+        .stats {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadeIn 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input.edit-input {
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            padding: 4px;
+            background: transparent;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        /* MOBILE FIX */
+        @media (max-width: 600px) {
+            body {
+                padding: 0 !important;
+                display: block !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-    <div class="header-row">
-        <h2>ToDo List</h2>
-        <button id="themeToggle">Dark Mode</button>
-    </div>
+    </style>
+    </head>
 
-    <div class="inputs">
-        <input type="text" id="taskInput" placeholder="Input task...">
+    <body>
+        <div class="container">
+            <div class="header-row">
+                <h2>ToDo List</h2>
+                <button id="themeToggle">Dark Mode</button>
+            </div>
 
-        <select id="categorySelect">
-            <option value="General">General</option>
-            <option value="Work">Work</option>
-            <option value="School">School</option>
-            <option value="Personal">Personal</option>
-        </select>
+            <div class="inputs">
+                <input type="text" id="taskInput" placeholder="Input task...">
 
-        <input type="datetime-local" id="deadlineInput">
-        <button id="addBtn">Add task</button>
-    </div>
+                <select id="categorySelect">
+                    <option value="Work">Work</option>
+                    <option value="School">School</option>
+                    <option value="Personal">Personal</option>
+                </select>
 
-    <ul id="taskList"></ul>
+                <input type="datetime-local" id="deadlineInput">
+                <button id="addBtn">Add task</button>
+            </div>
 
-    <div class="stats">
-        <div id="statsLeft"></div>
-        <div id="statsRight"></div>
-    </div>
-</div>
+            <ul id="taskList"></ul>
 
-<!-- Online alarm sound -->
-<audio id="alarmSound">
-    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
-</audio>
+            <div class="stats">
+                <div id="statsLeft"></div>
+                <div id="statsRight"></div>
+            </div>
+        </div>
 
-<script>
-const taskInput = document.getElementById("taskInput");
-const categorySelect = document.getElementById("categorySelect");
-const deadlineInput = document.getElementById("deadlineInput");
-const addBtn = document.getElementById("addBtn");
-const taskList = document.getElementById("taskList");
-const themeToggle = document.getElementById("themeToggle");
-const statsLeft = document.getElementById("statsLeft");
-const statsRight = document.getElementById("statsRight");
-const alarmSound = document.getElementById("alarmSound");
+        <!-- Online alarm sound -->
+        <audio id="alarmSound">
+            <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+        </audio>
 
-let tasks = [];
-let dragSrcId = null;
+        <script>
+            const taskInput = document.getElementById("taskInput");
+            const categorySelect = document.getElementById("categorySelect");
+            const deadlineInput = document.getElementById("deadlineInput");
+            const addBtn = document.getElementById("addBtn");
+            const taskList = document.getElementById("taskList");
+            const themeToggle = document.getElementById("themeToggle");
+            const statsLeft = document.getElementById("statsLeft");
+            const statsRight = document.getElementById("statsRight");
+            const alarmSound = document.getElementById("alarmSound");
 
-// Автоматично попълване на текущата дата и час
-window.addEventListener("load", () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    deadlineInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-});
+            let tasks = [];
+            let dragSrcId = null;
 
-// -------- Theme (Dark / Light) --------
-function loadTheme() {
-    const theme = localStorage.getItem("theme") || "light";
-    if (theme === "dark") {
-        document.body.classList.add("dark");
-        themeToggle.textContent = "Light Mode";
-    } else {
-        document.body.classList.remove("dark");
-        themeToggle.textContent = "Dark Mode";
-    }
-}
+            // Автоматично попълване на текущата дата и час
+            window.addEventListener("load", () => {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, "0");
+                const day = String(now.getDate()).padStart(2, "0");
+                const hours = String(now.getHours()).padStart(2, "0");
+                const minutes = String(now.getMinutes()).padStart(2, "0");
+                deadlineInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            });
 
-themeToggle.addEventListener("click", () => {
-    const isDark = document.body.classList.toggle("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-    themeToggle.textContent = isDark ? "Light Mode" : "Dark Mode";
-});
-
-// -------- LOCALSTORAGE --------
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function loadTasks() {
-    const stored = localStorage.getItem("tasks");
-    tasks = stored ? JSON.parse(stored) : [];
-
-    tasks.forEach(t => {
-        if (typeof t.alarmPlayed === "undefined") t.alarmPlayed = false;
-    });
-
-    taskList.innerHTML = "";
-    tasks.forEach(t => createTaskElement(t, false));
-    updateStats();
-}
-
-// -------- Statistics --------
-function updateStats() {
-    const total = tasks.length;
-    const completed = tasks.filter(t => t.completed).length;
-    const active = total - completed;
-    statsLeft.textContent = `Total: ${total} | Active: ${active}`;
-    statsRight.textContent = `Completed: ${completed}`;
-}
-
-// -------- Add task --------
-addBtn.addEventListener("click", addTask);
-taskInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") addTask();
-});
-
-function addTask() {
-    const text = taskInput.value.trim();
-    if (text === "") return;
-
-    const category = categorySelect.value;
-    const deadline = deadlineInput.value || null;
-
-    const task = {
-        id: Date.now().toString(),
-        text,
-        category,
-        deadline,
-        completed: false,
-        alarmPlayed: false
-    };
-
-    tasks.push(task);
-    saveTasks();
-    createTaskElement(task, true);
-    updateStats();
-
-    taskInput.value = "";
-    deadlineInput.value = "";
-}
-
-// -------- Create Task Element --------
-function createTaskElement(task, animated) {
-    const li = document.createElement("li");
-    li.dataset.id = task.id;
-    li.draggable = true;
-    if (animated) li.classList.add("fade-in");
-
-    // Top row
-    const topRow = document.createElement("div");
-    topRow.className = "top-row";
-
-    const textDiv = document.createElement("div");
-    textDiv.className = "task-text";
-
-    const span = document.createElement("span");
-    span.textContent = task.text;
-    if (task.completed) span.classList.add("completed");
-    span.addEventListener("dblclick", () => startEditTask(task.id, span));
-    textDiv.appendChild(span);
-
-    const catDiv = document.createElement("div");
-    const catSpan = document.createElement("span");
-    catSpan.className = "category-badge";
-    if (task.category !== "General") {
-        catSpan.classList.add(`category-${task.category}`);
-    }
-    catSpan.textContent = task.category;
-    catDiv.appendChild(catSpan);
-
-    topRow.appendChild(textDiv);
-    topRow.appendChild(catDiv);
-
-    // Middle row
-    const middleRow = document.createElement("div");
-    middleRow.className = "middle-row";
-
-    const deadlineInfo = document.createElement("div");
-    deadlineInfo.className = "deadline-info";
-
-    let deadlineText;
-    if (task.deadline) {
-        const d = new Date(task.deadline);
-        const formatted =
-            d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
-            " " +
-            d.getHours().toString().padStart(2, "0") + ":" +
-            d.getMinutes().toString().padStart(2, "0");
-
-        deadlineText = "To-do " + formatted;
-    } else {
-        deadlineText = "To-do  No deadline";
-    }
-
-    deadlineInfo.appendChild(document.createTextNode(deadlineText + " "));
-
-    const alarmIcon = document.createElement("span");
-    alarmIcon.className = "alarm-icon";
-    alarmIcon.textContent = "⏰";
-    deadlineInfo.appendChild(alarmIcon);
-
-    if (task.completed) alarmIcon.style.display = "none";
-
-    const countdownEl = document.createElement("div");
-    countdownEl.className = "countdown";
-
-    middleRow.appendChild(deadlineInfo);
-    middleRow.appendChild(countdownEl);
-
-    // Bottom row
-    const bottomRow = document.createElement("div");
-    bottomRow.className = "bottom-row";
-
-    const completeBtn = document.createElement("button");
-    completeBtn.className = "btn btn-complete";
-    completeBtn.textContent = task.completed ? "Uncheck" : "Complete";
-    completeBtn.onclick = () => toggleComplete(task.id, span, completeBtn);
-
-    const editBtn = document.createElement("button");
-    editBtn.className = "btn btn-edit";
-    editBtn.textContent = "Edit";
-    editBtn.onclick = () => startEditTask(task.id, span);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "btn btn-delete";
-    deleteBtn.textContent = "Delete";
-    deleteBtn.onclick = () => deleteTask(task.id, li);
-
-    bottomRow.appendChild(completeBtn);
-    bottomRow.appendChild(editBtn);
-    bottomRow.appendChild(deleteBtn);
-
-    li.appendChild(topRow);
-    li.appendChild(middleRow);
-    li.appendChild(bottomRow);
-
-    taskList.appendChild(li);
-
-    updateCountdownForTask(task, countdownEl, alarmIcon, deadlineInfo);
-}
-
-// -------- Countdown + Alarm --------
-function updateCountdownForTask(task, countdownEl, alarmIcon, deadlineInfoEl) {
-    function update() {
-        if (!task.deadline) {
-            countdownEl.textContent = "No deadline";
-            if (alarmIcon) alarmIcon.style.display = "none";
-            return;
-        }
-
-        const now = Date.now();
-        const end = new Date(task.deadline).getTime();
-        const diff = end - now;
-
-        if (diff <= 0) {
-            countdownEl.textContent = "Overdue";
-            countdownEl.classList.add("overdue");
-            if (alarmIcon) alarmIcon.style.display = "none";
-            return;
-        }
-
-        const mins = Math.floor(diff / 60000);
-        const hours = Math.floor(mins / 60);
-        const days = Math.floor(hours / 24);
-
-        let text;
-        if (days > 0) text = `Left: ${days} days`;
-        else if (hours > 0) text = `Left: ${hours} hours`;
-        else text = `Left: ${mins} min`;
-
-        countdownEl.textContent = text;
-
-        const twoHours = 2 * 60 * 60 * 1000;
-
-        if (task.completed) {
-            alarmIcon.style.display = "none";
-            return;
-        }
-
-        if (diff < twoHours) {
-            alarmIcon.style.display = "inline-block";
-            alarmIcon.classList.add("alarm-active");
-
-            if (!task.alarmPlayed) {
-                try {
-                    alarmSound.currentTime = 0;
-                    alarmSound.play();
-                } catch (e) {}
-                task.alarmPlayed = true;
-                saveTasks();
+            // -------- Theme (Dark / Light) --------
+            function loadTheme() {
+                const theme = localStorage.getItem("theme") || "light";
+                if (theme === "dark") {
+                    document.body.classList.add("dark");
+                    themeToggle.textContent = "Light Mode";
+                } else {
+                    document.body.classList.remove("dark");
+                    themeToggle.textContent = "Dark Mode";
+                }
             }
-        } else {
-            alarmIcon.classList.remove("alarm-active");
-        }
-    }
 
-    update();
-    setInterval(update, 60000);
-}
+            themeToggle.addEventListener("click", () => {
+                const isDark = document.body.classList.toggle("dark");
+                localStorage.setItem("theme", isDark ? "dark" : "light");
+                themeToggle.textContent = isDark ? "Light Mode" : "Dark Mode";
+            });
 
-// -------- Complete / Uncheck --------
-function toggleComplete(id, spanEl, btn) {
-    const task = tasks.find(t => t.id === id);
-    if (!task) return;
+            // -------- LOCALSTORAGE --------
+            function saveTasks() {
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
 
-    task.completed = !task.completed;
+            function loadTasks() {
+                const stored = localStorage.getItem("tasks");
+                tasks = stored ? JSON.parse(stored) : [];
 
-    const li = taskList.querySelector(`li[data-id="${id}"]`);
-    const alarmIcon = li.querySelector(".alarm-icon");
-    const deadlineInfo = li.querySelector(".deadline-info");
+                tasks.forEach(t => {
+                    if (typeof t.alarmPlayed === "undefined") t.alarmPlayed = false;
+                });
 
-    if (task.completed) {
-        spanEl.classList.add("completed");
-        deadlineInfo.classList.add("completed-deadline");
-        btn.textContent = "Uncheck";
-        alarmIcon.style.display = "none";
-        task.alarmPlayed = true;
-    } else {
-        spanEl.classList.remove("completed");
-        deadlineInfo.classList.remove("completed-deadline");
-        btn.textContent = "Complete";
-        alarmIcon.style.display = "inline-block";
-        task.alarmPlayed = false;
-    }
+                taskList.innerHTML = "";
+                tasks.forEach(t => createTaskElement(t, false));
+                updateStats();
+            }
 
-    saveTasks();
-    updateStats();
-}
+            // -------- Statistics --------
+            function updateStats() {
+                const total = tasks.length;
+                const completed = tasks.filter(t => t.completed).length;
+                const active = total - completed;
+                statsLeft.textContent = `Total: ${total} | Active: ${active}`;
+                statsRight.textContent = `Completed: ${completed}`;
+            }
 
-// -------- Edit Task --------
-function startEditTask(id, spanEl) {
-    const task = tasks.find(t => t.id === id);
-    if (!task) return;
+            // -------- Add task --------
+            addBtn.addEventListener("click", addTask);
+            taskInput.addEventListener("keydown", e => {
+                if (e.key === "Enter") addTask();
+            });
 
-    const li = document.querySelector(`li[data-id="${id}"]`);
-    const deadlineInfo = li.querySelector(".deadline-info");
-    const catBadge = li.querySelector(".category-badge");
+            function addTask() {
+                const text = taskInput.value.trim();
+                if (text === "") return;
 
-    const textInput = document.createElement("input");
-    textInput.type = "text";
-    textInput.value = task.text;
-    textInput.className = "edit-input";
+                const category = categorySelect.value;
+                const deadline = deadlineInput.value || null;
 
-    const dateInput = document.createElement("input");
-    dateInput.type = "datetime-local";
-    dateInput.className = "edit-input";
-    dateInput.value = task.deadline || "";
+                const task = {
+                    id: Date.now().toString(),
+                    text,
+                    category,
+                    deadline,
+                    completed: false,
+                    alarmPlayed: false
+                };
 
-    const select = document.createElement("select");
-    select.className = "edit-input";
-    ["General", "Work", "School", "Personal"].forEach(opt => {
-        const o = document.createElement("option");
-        o.value = opt;
-        o.textContent = opt;
-        if (opt === task.category) o.selected = true;
-        select.appendChild(o);
-    });
+                tasks.push(task);
+                saveTasks();
+                createTaskElement(task, true);
+                updateStats();
 
-    spanEl.replaceWith(textInput);
-    deadlineInfo.replaceWith(dateInput);
-    catBadge.replaceWith(select);
+                taskInput.value = "";
+                deadlineInput.value = "";
+            }
 
-    textInput.focus();
-    textInput.select();
+            // -------- Create Task Element --------
+            function createTaskElement(task, animated) {
+                const li = document.createElement("li");
+                li.dataset.id = task.id;
+                li.draggable = true;
+                if (animated) li.classList.add("fade-in");
 
-    function finish(save) {
-        if (save) {
-            const newText = textInput.value.trim();
-            const newDate = dateInput.value;
-            const newCat = select.value;
+                // Top row
+                const topRow = document.createElement("div");
+                topRow.className = "top-row";
 
-            if (newText !== "") task.text = newText;
-            task.deadline = newDate || null;
-            task.category = newCat;
-            task.alarmPlayed = false;
+                const textDiv = document.createElement("div");
+                textDiv.className = "task-text";
 
-            saveTasks();
-        }
+                const span = document.createElement("span");
+                span.textContent = task.text;
+                if (task.completed) span.classList.add("completed");
+                span.addEventListener("dblclick", () => startEditTask(task.id, span));
+                textDiv.appendChild(span);
 
-        const newSpan = document.createElement("span");
-        newSpan.textContent = task.text;
-        if (task.completed) newSpan.classList.add("completed");
-        newSpan.addEventListener("dblclick", () => startEditTask(id, newSpan));
+                const catDiv = document.createElement("div");
+                const catSpan = document.createElement("span");
+                catSpan.className = "category-badge";
+                if (task.category !== "General") {
+                    catSpan.classList.add(`category-${task.category}`);
+                }
+                catSpan.textContent = task.category;
+                catDiv.appendChild(catSpan);
 
-        const newDeadlineInfo = document.createElement("div");
-        newDeadlineInfo.className = "deadline-info";
+                topRow.appendChild(textDiv);
+                topRow.appendChild(catDiv);
 
-        let deadlineText;
-        if (task.deadline) {
-            const d = new Date(task.deadline);
-            const formatted =
-                d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
-                " " +
-                d.getHours().toString().padStart(2, "0") + ":" +
-                d.getMinutes().toString().padStart(2, "0");
+                // Middle row
+                const middleRow = document.createElement("div");
+                middleRow.className = "middle-row";
 
-            deadlineText = "To-do " + formatted;
-        } else {
-            deadlineText = "To-do  No deadline";
-        }
+                const deadlineInfo = document.createElement("div");
+                deadlineInfo.className = "deadline-info";
 
-        newDeadlineInfo.appendChild(document.createTextNode(deadlineText + " "));
+                let deadlineText;
+                if (task.deadline) {
+                    const d = new Date(task.deadline);
+                    const formatted =
+                        d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
+                        " " +
+                        d.getHours().toString().padStart(2, "0") + ":" +
+                        d.getMinutes().toString().padStart(2, "0");
 
-        const newAlarmIcon = document.createElement("span");
-        newAlarmIcon.className = "alarm-icon";
-        newAlarmIcon.textContent = "⏰";
-        newDeadlineInfo.appendChild(newAlarmIcon);
+                    deadlineText = "To-do " + formatted;
+                } else {
+                    deadlineText = "To-do  No deadline";
+                }
 
-        const newCatBadge = document.createElement("span");
-        newCatBadge.className = "category-badge";
-        if (task.category !== "General") {
-            newCatBadge.classList.add(`category-${task.category}`);
-        }
-        newCatBadge.textContent = task.category;
+                deadlineInfo.appendChild(document.createTextNode(deadlineText + " "));
 
-        textInput.replaceWith(newSpan);
-        dateInput.replaceWith(newDeadlineInfo);
-        select.replaceWith(newCatBadge);
+                const alarmIcon = document.createElement("span");
+                alarmIcon.className = "alarm-icon";
+                alarmIcon.textContent = "⏰";
+                deadlineInfo.appendChild(alarmIcon);
 
-        const countdownEl = li.querySelector(".countdown");
-        updateCountdownForTask(task, countdownEl, newAlarmIcon, newDeadlineInfo);
-    }
+                if (task.completed) alarmIcon.style.display = "none";
 
-    textInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") finish(true);
-        if (e.key === "Escape") finish(false);
-    });
+                const countdownEl = document.createElement("div");
+                countdownEl.className = "countdown";
 
-    dateInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") finish(true);
-        if (e.key === "Escape") finish(false);
-    });
+                middleRow.appendChild(deadlineInfo);
+                middleRow.appendChild(countdownEl);
 
-    select.addEventListener("keydown", e => {
-        if (e.key === "Enter") finish(true);
-        if (e.key === "Escape") finish(false);
-    });
+                // Bottom row
+                const bottomRow = document.createElement("div");
+                bottomRow.className = "bottom-row";
 
-    textInput.addEventListener("blur", () => finish(true));
-    dateInput.addEventListener("blur", () => finish(true));
-}
+                const completeBtn = document.createElement("button");
+                completeBtn.className = "btn btn-complete";
+                completeBtn.textContent = task.completed ? "Uncheck" : "Complete";
+                completeBtn.onclick = () => toggleComplete(task.id, span, completeBtn);
 
-// -------- Delete Task --------
-function deleteTask(id, liEl) {
-    liEl.style.opacity = "0";
-    liEl.style.transform = "translateX(10px)";
-    setTimeout(() => {
-        tasks = tasks.filter(t => t.id !== id);
-        saveTasks();
-        liEl.remove();
-        updateStats();
-    }, 150);
-}
+                const editBtn = document.createElement("button");
+                editBtn.className = "btn btn-edit";
+                editBtn.textContent = "Edit";
+                editBtn.onclick = () => startEditTask(task.id, span);
 
-// -------- Drag & Drop --------
-taskList.addEventListener("dragstart", e => {
-    const li = e.target.closest("li");
-    if (!li) return;
-    dragSrcId = li.dataset.id;
-    li.classList.add("dragging");
-});
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-delete";
+                deleteBtn.textContent = "Delete";
+                deleteBtn.onclick = () => deleteTask(task.id, li);
 
-taskList.addEventListener("dragend", e => {
-    const li = e.target.closest("li");
-    if (li) li.classList.remove("dragging");
-});
+                bottomRow.appendChild(completeBtn);
+                bottomRow.appendChild(editBtn);
+                bottomRow.appendChild(deleteBtn);
 
-taskList.addEventListener("dragover", e => {
-    e.preventDefault();
-    const dragging = taskList.querySelector(".dragging");
-    if (!dragging) return;
+                li.appendChild(topRow);
+                li.appendChild(middleRow);
+                li.appendChild(bottomRow);
 
-    const afterElement = getDragAfterElement(taskList, e.clientY);
-    if (afterElement == null) {
-        taskList.appendChild(dragging);
-    } else {
-        taskList.insertBefore(dragging, afterElement);
-    }
-});
+                taskList.appendChild(li);
 
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+                updateCountdownForTask(task, countdownEl, alarmIcon, deadlineInfo);
+            }
 
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-            return { offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
+            // -------- Countdown + Alarm --------
+            function updateCountdownForTask(task, countdownEl, alarmIcon, deadlineInfoEl) {
+                function update() {
+                    if (!task.deadline) {
+                        countdownEl.textContent = "No deadline";
+                        if (alarmIcon) alarmIcon.style.display = "none";
+                        return;
+                    }
 
-taskList.addEventListener("drop", () => {
-    const newOrder = [];
-    taskList.querySelectorAll("li").forEach(li => {
-        const id = li.dataset.id;
-        const task = tasks.find(t => t.id === id);
-        if (task) newOrder.push(task);
-    });
-    tasks = newOrder;
-    saveTasks();
-});
+                    const now = Date.now();
+                    const end = new Date(task.deadline).getTime();
+                    const diff = end - now;
 
-// -------- Init --------
-loadTheme();
-loadTasks();
+                    if (diff <= 0) {
+                        countdownEl.textContent = "Overdue";
+                        countdownEl.classList.add("overdue");
+                        if (alarmIcon) alarmIcon.style.display = "none";
+                        return;
+                    }
 
-// -------- Service Worker регистрация --------
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js")
-        .then(() => console.log("Service Worker registered"))
-        .catch(err => console.log("SW registration failed:", err));
-}
-</script>
+                    const mins = Math.floor(diff / 60000);
+                    const hours = Math.floor(mins / 60);
+                    const days = Math.floor(hours / 24);
 
-</body>
+                    let text;
+                    if (days > 0) text = `Left: ${days} days`;
+                    else if (hours > 0) text = `Left: ${hours} hours`;
+                    else text = `Left: ${mins} min`;
+
+                    countdownEl.textContent = text;
+
+                    const twoHours = 2 * 60 * 60 * 1000;
+
+                    if (task.completed) {
+                        alarmIcon.style.display = "none";
+                        return;
+                    }
+
+                    if (diff < twoHours) {
+                        alarmIcon.style.display = "inline-block";
+                        alarmIcon.classList.add("alarm-active");
+
+                        if (!task.alarmPlayed) {
+                            // Alarm sound removed - keeping alarm functionality only
+                            task.alarmPlayed = true;
+                            saveTasks();
+                        }
+                    } else {
+                        alarmIcon.classList.remove("alarm-active");
+                    }
+                }
+
+                update();
+                setInterval(update, 60000);
+            }
+
+            // -------- Complete / Uncheck --------
+            function toggleComplete(id, spanEl, btn) {
+                const task = tasks.find(t => t.id === id);
+                if (!task) return;
+
+                task.completed = !task.completed;
+
+                const li = taskList.querySelector(`li[data-id="${id}"]`);
+                if (!li) return;
+
+                const alarmIcon = li.querySelector(".alarm-icon");
+                const deadlineInfo = li.querySelector(".deadline-info");
+
+                if (task.completed) {
+                    spanEl.classList.add("completed");
+                    deadlineInfo.classList.add("completed-deadline");
+                    btn.textContent = "Uncheck";
+                    if (alarmIcon) alarmIcon.style.display = "none";
+                    task.alarmPlayed = true;
+                } else {
+                    spanEl.classList.remove("completed");
+                    deadlineInfo.classList.remove("completed-deadline");
+                    btn.textContent = "Complete";
+                    if (alarmIcon) alarmIcon.style.display = "inline-block";
+                    task.alarmPlayed = false;
+                }
+
+                saveTasks();
+                updateStats();
+            }
+
+            // -------- Edit Task --------
+            function startEditTask(id, spanEl) {
+                const task = tasks.find(t => t.id === id);
+                if (!task) return;
+
+                const li = document.querySelector(`li[data-id="${id}"]`);
+                const deadlineInfo = li.querySelector(".deadline-info");
+                const catBadge = li.querySelector(".category-badge");
+
+                const textInput = document.createElement("input");
+                textInput.type = "text";
+                textInput.value = task.text;
+                textInput.className = "edit-input";
+
+                const dateInput = document.createElement("input");
+                dateInput.type = "datetime-local";
+                dateInput.className = "edit-input";
+                dateInput.value = task.deadline || "";
+
+                const select = document.createElement("select");
+                select.className = "edit-input";
+                ["Work", "School", "Personal"].forEach(opt => {
+                    const o = document.createElement("option");
+                    o.value = opt;
+                    o.textContent = opt;
+                    if (opt === task.category) o.selected = true;
+                    select.appendChild(o);
+                });
+
+                spanEl.replaceWith(textInput);
+                deadlineInfo.replaceWith(dateInput);
+                catBadge.replaceWith(select);
+
+                textInput.focus();
+                textInput.select();
+
+                function finish(save) {
+                    if (save) {
+                        const newText = textInput.value.trim();
+                        const newDate = dateInput.value;
+                        const newCat = select.value;
+
+                        if (newText !== "") task.text = newText;
+                        task.deadline = newDate || null;
+                        task.category = newCat;
+                        task.alarmPlayed = false;
+
+                        saveTasks();
+                    }
+
+                    const newSpan = document.createElement("span");
+                    newSpan.textContent = task.text;
+                    if (task.completed) newSpan.classList.add("completed");
+                    newSpan.addEventListener("dblclick", () => startEditTask(id, newSpan));
+
+                    const newDeadlineInfo = document.createElement("div");
+                    newDeadlineInfo.className = "deadline-info";
+
+                    let deadlineText;
+                    if (task.deadline) {
+                        const d = new Date(task.deadline);
+                        const formatted =
+                            d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
+                            " " +
+                            d.getHours().toString().padStart(2, "0") + ":" +
+                            d.getMinutes().toString().padStart(2, "0");
+
+                        deadlineText = "To-do " + formatted;
+                    } else {
+                        deadlineText = "To-do  No deadline";
+                    }
+
+                    newDeadlineInfo.appendChild(document.createTextNode(deadlineText + " "));
+
+                    const newAlarmIcon = document.createElement("span");
+                    newAlarmIcon.className = "alarm-icon";
+                    newAlarmIcon.textContent = "⏰";
+                    newDeadlineInfo.appendChild(newAlarmIcon);
+
+                    const newCatBadge = document.createElement("span");
+                    newCatBadge.className = "category-badge";
+                    if (task.category !== "General") {
+                        newCatBadge.classList.add(`category-${task.category}`);
+                    }
+                    newCatBadge.textContent = task.category;
+
+                    textInput.replaceWith(newSpan);
+                    dateInput.replaceWith(newDeadlineInfo);
+                    select.replaceWith(newCatBadge);
+
+                    // Update the edit button to reference the new span
+                    const editBtn = li.querySelector(".btn-edit");
+                    if (editBtn) {
+                        editBtn.onclick = () => startEditTask(id, newSpan);
+                    }
+
+                    // Update the complete button to reference the new span
+                    const completeBtn = li.querySelector(".btn-complete");
+                    if (completeBtn) {
+                        completeBtn.onclick = () => toggleComplete(id, newSpan, completeBtn);
+                    }
+
+                    const countdownEl = li.querySelector(".countdown");
+                    updateCountdownForTask(task, countdownEl, newAlarmIcon, newDeadlineInfo);
+                }
+
+                textInput.addEventListener("keydown", e => {
+                    if (e.key === "Enter") finish(true);
+                    if (e.key === "Escape") finish(false);
+                });
+
+                dateInput.addEventListener("keydown", e => {
+                    if (e.key === "Enter") finish(true);
+                    if (e.key === "Escape") finish(false);
+                });
+
+                select.addEventListener("keydown", e => {
+                    if (e.key === "Enter") finish(true);
+                    if (e.key === "Escape") finish(false);
+                });
+
+                // Remove blur listeners to allow editing all fields simultaneously
+                // Save on Enter key or when clicking outside the task item
+                const handleOutsideClick = (e) => {
+                    if (!li.contains(e.target)) {
+                        finish(true);
+                        document.removeEventListener("click", handleOutsideClick);
+                    }
+                };
+                
+                setTimeout(() => {
+                    document.addEventListener("click", handleOutsideClick);
+                }, 10);
+            }
+
+            // -------- Delete Task --------
+            function deleteTask(id, liEl) {
+                liEl.style.opacity = "0";
+                liEl.style.transform = "translateX(10px)";
+                setTimeout(() => {
+                    tasks = tasks.filter(t => t.id !== id);
+                    saveTasks();
+                    liEl.remove();
+                    updateStats();
+                }, 150);
+            }
+
+            // -------- Drag & Drop --------
+            taskList.addEventListener("dragstart", e => {
+                const li = e.target.closest("li");
+                if (!li) return;
+                dragSrcId = li.dataset.id;
+                li.classList.add("dragging");
+            });
+
+            taskList.addEventListener("dragend", e => {
+                const li = e.target.closest("li");
+                if (li) li.classList.remove("dragging");
+            });
+
+            taskList.addEventListener("dragover", e => {
+                e.preventDefault();
+                const dragging = taskList.querySelector(".dragging");
+                if (!dragging) return;
+
+                const afterElement = getDragAfterElement(taskList, e.clientY);
+                if (afterElement == null) {
+                    taskList.appendChild(dragging);
+                } else {
+                    taskList.insertBefore(dragging, afterElement);
+                }
+            });
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            taskList.addEventListener("drop", () => {
+                const newOrder = [];
+                taskList.querySelectorAll("li").forEach(li => {
+                    const id = li.dataset.id;
+                    const task = tasks.find(t => t.id === id);
+                    if (task) newOrder.push(task);
+                });
+                tasks = newOrder;
+                saveTasks();
+            });
+
+            // -------- Init --------
+            loadTheme();
+            loadTasks();
+
+            // -------- Service Worker регистрация --------
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("service-worker.js")
+                    .then(() => console.log("Service Worker registered"))
+                    .catch(err => console.log("SW registration failed:", err));
+            }
+        </script>
+
+    </body>
+
 </html>
-
-
-
-       
-
-
-
-
-
-
-
-
-
-
-
 
 
 
