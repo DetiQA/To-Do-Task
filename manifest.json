@@ -1,6 +1,8 @@
 {
   "name": "To-Do Task",
   "short_name": "ToDo",
+  "lang": "bg",
+  "scope": "/To-Do-Task/",
   "start_url": "/To-Do-Task/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
