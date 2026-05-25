@@ -231,6 +231,11 @@
             color: #9c27b0;
         }
 
+        .category-Shopping {
+            border-color: #ff5722;
+            color: #ff5722;
+        }
+
         .middle-row {
             display: flex;
             justify-content: space-between;
@@ -351,6 +356,117 @@
             justify-content: space-between;
         }
 
+        .archive-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .archive-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: var(--muted);
+        }
+
+        #archiveList {
+            margin-top: 10px;
+            padding: 0;
+        }
+
+        #archiveList li {
+            opacity: 0.7;
+        }
+
+        .btn-restore {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-permanent-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .shopping-list-icon {
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 8px;
+            color: var(--accent);
+        }
+
+        .shopping-list-container {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .shopping-list-container.expanded {
+            display: block;
+        }
+
+        .shopping-list-input {
+            width: 100%;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--card-eng);
+            color: var(--text);
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+        .shopping-list-input::placeholder {
+            color: var(--muted);
+        }
+
+        .shopping-list-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .shopping-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .shopping-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .shopping-list-item span {
+            flex: 1;
+            margin-right: 8px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .shopping-list-item.selected span {
+            background: var(--accent);
+            color: white;
+        }
+
+        .shopping-list-item button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
         .fade-in {
             opacity: 0;
             transform: translateY(6px);
@@ -409,6 +525,7 @@
                     <option value="Work">Work</option>
                     <option value="School">School</option>
                     <option value="Personal">Personal</option>
+                    <option value="Shopping">Shopping</option>
                 </select>
 
                 <input type="datetime-local" id="deadlineInput">
@@ -420,6 +537,11 @@
             <div class="stats">
                 <div id="statsLeft"></div>
                 <div id="statsRight"></div>
+            </div>
+
+            <div class="archive-section">
+                <h3>Archive</h3>
+                <ul id="archiveList"></ul>
             </div>
         </div>
 
@@ -438,8 +560,10 @@
             const statsLeft = document.getElementById("statsLeft");
             const statsRight = document.getElementById("statsRight");
             const alarmSound = document.getElementById("alarmSound");
+            const archiveList = document.getElementById("archiveList");
 
             let tasks = [];
+            let archivedTasks = [];
             let dragSrcId = null;
 
             // Автоматично попълване на текущата дата и час
@@ -474,19 +598,25 @@
             // -------- LOCALSTORAGE --------
             function saveTasks() {
                 localStorage.setItem("tasks", JSON.stringify(tasks));
+                localStorage.setItem("archivedTasks", JSON.stringify(archivedTasks));
             }
 
             function loadTasks() {
                 const stored = localStorage.getItem("tasks");
                 tasks = stored ? JSON.parse(stored) : [];
 
+                const archivedStored = localStorage.getItem("archivedTasks");
+                archivedTasks = archivedStored ? JSON.parse(archivedStored) : [];
+
                 tasks.forEach(t => {
                     if (typeof t.alarmPlayed === "undefined") t.alarmPlayed = false;
+                    if (typeof t.shoppingList === "undefined") t.shoppingList = [];
                 });
 
                 taskList.innerHTML = "";
                 tasks.forEach(t => createTaskElement(t, false));
                 updateStats();
+                renderArchivedTasks();
             }
 
             // -------- Statistics --------
@@ -517,7 +647,8 @@
                     category,
                     deadline,
                     completed: false,
-                    alarmPlayed: false
+                    alarmPlayed: false,
+                    shoppingList: []
                 };
 
                 tasks.push(task);
@@ -561,6 +692,8 @@
                 topRow.appendChild(textDiv);
                 topRow.appendChild(catDiv);
 
+
+
                 // Middle row
                 const middleRow = document.createElement("div");
                 middleRow.className = "middle-row";
@@ -591,11 +724,29 @@
 
                 if (task.completed) alarmIcon.style.display = "none";
 
+                // ---- Shopping icon BELOW the date (inside deadlineInfo) ----
+                if (task.category === "Shopping") {
+                    const shoppingIcon = document.createElement("span");
+                    shoppingIcon.className = "shopping-list-icon";
+                    shoppingIcon.textContent = "📝";
+                    shoppingIcon.style.display = "block"; // нов ред под датата
+                    shoppingIcon.style.marginTop = "4px";
+                    shoppingIcon.onclick = () => toggleShoppingList(task.id);
+                    deadlineInfo.appendChild(shoppingIcon); // <-- ВАЖНО!
+                }
+
                 const countdownEl = document.createElement("div");
                 countdownEl.className = "countdown";
 
                 middleRow.appendChild(deadlineInfo);
                 middleRow.appendChild(countdownEl);
+
+
+
+
+
+
+
 
                 // Bottom row
                 const bottomRow = document.createElement("div");
@@ -624,9 +775,146 @@
                 li.appendChild(middleRow);
                 li.appendChild(bottomRow);
 
+                // Add shopping list container for Shopping category
+                if (task.category === "Shopping") {
+                    const shoppingListContainer = document.createElement("div");
+                    shoppingListContainer.className = "shopping-list-container";
+                    shoppingListContainer.id = `shopping-list-${task.id}`;
+
+                    const shoppingInput = document.createElement("input");
+                    shoppingInput.type = "text";
+                    shoppingInput.className = "shopping-list-input";
+                    shoppingInput.placeholder = "Add product...";
+                    shoppingInput.onkeydown = (e) => {
+                        if (e.key === "Enter") {
+                            addShoppingListItem(task.id, shoppingInput.value);
+                            shoppingInput.value = "";
+                        }
+                    };
+
+                    const shoppingItems = document.createElement("ul");
+                    shoppingItems.className = "shopping-list-items";
+                    shoppingItems.id = `shopping-items-${task.id}`;
+
+                    shoppingListContainer.appendChild(shoppingInput);
+                    shoppingListContainer.appendChild(shoppingItems);
+                    li.appendChild(shoppingListContainer);
+
+                    // Render existing shopping list items
+                    task.shoppingList.forEach(item => {
+                        renderShoppingListItem(task.id, item);
+                    });
+                }
+
                 taskList.appendChild(li);
 
                 updateCountdownForTask(task, countdownEl, alarmIcon, deadlineInfo);
+            }
+
+            // -------- Shopping List Functions --------
+            function toggleShoppingList(taskId) {
+                const container = document.getElementById(`shopping-list-${taskId}`);
+                if (container) {
+                    container.classList.toggle("expanded");
+                }
+            }
+
+            function addShoppingListItem(taskId, itemText) {
+                if (!itemText.trim()) return;
+
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+
+                const item = {
+                    id: Date.now().toString(),
+                    text: itemText,
+                    completed: false
+                };
+
+                task.shoppingList.push(item);
+                saveTasks();
+                renderShoppingListItem(taskId, item);
+            }
+
+            function renderShoppingListItem(taskId, item) {
+                const itemsList = document.getElementById(`shopping-items-${taskId}`);
+                if (!itemsList) return;
+
+                const li = document.createElement("li");
+                li.className = "shopping-list-item";
+                li.dataset.itemId = item.id;
+
+                const textSpan = document.createElement("span");
+                textSpan.textContent = item.text;
+                if (item.completed) textSpan.style.textDecoration = "line-through";
+                textSpan.style.cursor = "pointer";
+                textSpan.onclick = () => selectShoppingListItem(taskId, item.id, li);
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "×";
+                deleteBtn.onclick = () => deleteShoppingListItem(taskId, item.id, li);
+
+                li.appendChild(textSpan);
+                li.appendChild(deleteBtn);
+                itemsList.appendChild(li);
+            }
+
+
+
+            function selectShoppingListItem(taskId, itemId, liElement) {
+                // Remove selected class from all items in this list
+                const itemsList = document.getElementById(`shopping-items-${taskId}`);
+                const allItems = itemsList.querySelectorAll(".shopping-list-item");
+                allItems.forEach(item => item.classList.remove("selected"));
+
+                // Add selected class to clicked item
+                liElement.classList.add("selected");
+
+                // Store the current selection for keyboard delete
+                liElement.dataset.selected = "true";
+            }
+
+            // Add global keyboard listener for deleting selected shopping list items
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Delete" || e.key === "Backspace") {
+                    // Check if the active element is not an input field
+                    if (document.activeElement.tagName !== "INPUT") {
+                        const selectedItem = document.querySelector(".shopping-list-item.selected");
+                        if (selectedItem) {
+                            const taskId = selectedItem.closest(".shopping-list-container").id.replace("shopping-list-", "");
+                            const itemId = selectedItem.dataset.itemId;
+                            deleteShoppingListItem(taskId, itemId, selectedItem);
+                        }
+                    }
+                }
+            });
+
+            function toggleShoppingListItem(taskId, itemId) {
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+
+                const item = task.shoppingList.find(i => i.id === itemId);
+                if (!item) return;
+
+                item.completed = !item.completed;
+                saveTasks();
+
+                // Re-render the item
+                const itemsList = document.getElementById(`shopping-items-${taskId}`);
+                const li = itemsList.querySelector(`li[data-item-id="${itemId}"]`);
+                if (li) {
+                    const textSpan = li.querySelector("span");
+                    textSpan.style.textDecoration = item.completed ? "line-through" : "none";
+                }
+            }
+
+            function deleteShoppingListItem(taskId, itemId, liElement) {
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+
+                task.shoppingList = task.shoppingList.filter(i => i.id !== itemId);
+                saveTasks();
+                liElement.remove();
             }
 
             // -------- Countdown + Alarm --------
@@ -737,7 +1025,7 @@
 
                 const select = document.createElement("select");
                 select.className = "edit-input";
-                ["Work", "School", "Personal"].forEach(opt => {
+                ["Work", "School", "Personal", "Shopping"].forEach(opt => {
                     const o = document.createElement("option");
                     o.value = opt;
                     o.textContent = opt;
@@ -845,7 +1133,7 @@
                         document.removeEventListener("click", handleOutsideClick);
                     }
                 };
-                
+
                 setTimeout(() => {
                     document.addEventListener("click", handleOutsideClick);
                 }, 10);
@@ -856,10 +1144,112 @@
                 liEl.style.opacity = "0";
                 liEl.style.transform = "translateX(10px)";
                 setTimeout(() => {
+                    const task = tasks.find(t => t.id === id);
+                    if (task) {
+                        task.deletedAt = new Date().toISOString();
+                        archivedTasks.push(task);
+                    }
                     tasks = tasks.filter(t => t.id !== id);
                     saveTasks();
                     liEl.remove();
                     updateStats();
+                    renderArchivedTasks();
+                }, 150);
+            }
+
+            // -------- Render Archived Tasks --------
+            function renderArchivedTasks() {
+                archiveList.innerHTML = "";
+                archivedTasks.forEach(task => {
+                    const li = document.createElement("li");
+                    li.dataset.id = task.id;
+
+                    const topRow = document.createElement("div");
+                    topRow.className = "top-row";
+
+                    const textDiv = document.createElement("div");
+                    textDiv.className = "task-text";
+
+                    const span = document.createElement("span");
+                    span.textContent = task.text;
+                    if (task.completed) span.classList.add("completed");
+                    textDiv.appendChild(span);
+
+                    const catDiv = document.createElement("div");
+                    const catSpan = document.createElement("span");
+                    catSpan.className = "category-badge";
+                    if (task.category !== "General") {
+                        catSpan.classList.add(`category-${task.category}`);
+                    }
+                    catSpan.textContent = task.category;
+                    catDiv.appendChild(catSpan);
+
+                    topRow.appendChild(textDiv);
+                    topRow.appendChild(catDiv);
+
+                    const middleRow = document.createElement("div");
+                    middleRow.className = "middle-row";
+
+                    const deletedInfo = document.createElement("div");
+                    deletedInfo.style.fontSize = "11px";
+                    deletedInfo.style.color = "var(--muted)";
+                    if (task.deletedAt) {
+                        const d = new Date(task.deletedAt);
+                        deletedInfo.textContent = `Deleted: ${d.toLocaleDateString()}`;
+                    }
+
+                    middleRow.appendChild(deletedInfo);
+
+                    const bottomRow = document.createElement("div");
+                    bottomRow.className = "bottom-row";
+
+                    const restoreBtn = document.createElement("button");
+                    restoreBtn.className = "btn btn-restore";
+                    restoreBtn.textContent = "Restore";
+                    restoreBtn.onclick = () => restoreTask(task.id, li);
+
+                    const permanentDeleteBtn = document.createElement("button");
+                    permanentDeleteBtn.className = "btn btn-permanent-delete";
+                    permanentDeleteBtn.textContent = "Delete Forever";
+                    permanentDeleteBtn.onclick = () => permanentDeleteTask(task.id, li);
+
+                    bottomRow.appendChild(restoreBtn);
+                    bottomRow.appendChild(permanentDeleteBtn);
+
+                    li.appendChild(topRow);
+                    li.appendChild(middleRow);
+                    li.appendChild(bottomRow);
+
+                    archiveList.appendChild(li);
+                });
+            }
+
+            // -------- Restore Task --------
+            function restoreTask(id, liEl) {
+                const task = archivedTasks.find(t => t.id === id);
+                if (!task) return;
+
+                delete task.deletedAt;
+                task.alarmPlayed = false;
+                tasks.push(task);
+                archivedTasks = archivedTasks.filter(t => t.id !== id);
+
+                saveTasks();
+                liEl.remove();
+                createTaskElement(task, true);
+                updateStats();
+            }
+
+            // -------- Permanent Delete Task --------
+            function permanentDeleteTask(id, liEl) {
+                if (!confirm("Are you sure you want to permanently delete this task?")) return;
+
+                liEl.style.opacity = "0";
+                liEl.style.transform = "translateX(10px)";
+                setTimeout(() => {
+                    archivedTasks = archivedTasks.filter(t => t.id !== id);
+                    saveTasks();
+                    liEl.remove();
                 }, 150);
             }
 
@@ -929,11 +1319,3 @@
     </body>
 
 </html>
-
-
-
-
-
-
-
-
