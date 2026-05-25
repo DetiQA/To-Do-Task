@@ -10,7 +10,7 @@
     <!-- PWA manifest -->
     <link rel="manifest" href="manifest.json">
 
-    <!-- Цвят на адрес бара на мобилни браузъри -->
+    <!-- Mobile browser address bar color -->
     <meta name="theme-color" content="#28A745">
 
     <style>
@@ -566,7 +566,7 @@
             let archivedTasks = [];
             let dragSrcId = null;
 
-            // Автоматично попълване на текущата дата и час
+            // Autofill current date and time
             window.addEventListener("load", () => {
                 const now = new Date();
                 const year = now.getFullYear();
@@ -740,9 +740,6 @@
 
                 middleRow.appendChild(deadlineInfo);
                 middleRow.appendChild(countdownEl);
-
-
-
 
 
 
@@ -1308,7 +1305,7 @@
             loadTheme();
             loadTasks();
 
-            // -------- Service Worker регистрация --------
+            // -------- Service Worker registration --------
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.register("service-worker.js")
                     .then(() => console.log("Service Worker registered"))
